@@ -1,0 +1,227 @@
+[
+  {
+    "id": "QF1024",
+    "title": "Broken Street Light",
+    "description": "Street light near library is not working since yesterday.",
+    "category": "Electrical",
+    "location": "Library Block",
+    "latitude": 20.2961,
+    "longitude": 85.8245,
+    "severity": "HIGH",
+    "impact": "HIGH",
+    "priority": "HIGH",
+    "priority_score": 18,
+    "priority_reason": "High campus traffic area at night; safety hazard",
+    "status": "IN_PROGRESS",
+    "image": "https://picsum.photos/seed/light1024/400/250",
+    "reporter": "student@quickfix.demo",
+    "created_at": "2026-09-27 10:42:00",
+    "updated_at": "2026-09-27 14:30:00",
+    "timeline": [
+      {
+        "status": "SUBMITTED",
+        "timestamp": "27 Sep, 10:42 AM",
+        "note": "Reported via QuickFix App by Student",
+        "completed": true
+      },
+      {
+        "status": "VERIFIED",
+        "timestamp": "27 Sep, 11:10 AM",
+        "note": "Verified by Campus Maintenance Officer",
+        "completed": true
+      },
+      {
+        "status": "IN_PROGRESS",
+        "timestamp": "27 Sep, 02:30 PM",
+        "note": "Electrician team dispatched with replacement fixture",
+        "completed": true
+      },
+      {
+        "status": "RESOLVED",
+        "timestamp": "",
+        "note": "Awaiting final testing and closure",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "QF1025",
+    "title": "Exposed Electrical Wire",
+    "description": "Exposed electrical wire hanging near CSE lab entrance. Sparks visible!",
+    "category": "Electrical",
+    "location": "CSE Block",
+    "latitude": 20.2975,
+    "longitude": 85.8258,
+    "severity": "CRITICAL",
+    "impact": "HIGH",
+    "priority": "CRITICAL",
+    "priority_score": 25,
+    "priority_reason": "Immediate risk of electric shock to students entering lab",
+    "status": "SUBMITTED",
+    "image": "https://picsum.photos/seed/wire1025/400/250",
+    "reporter": "student@quickfix.demo",
+    "created_at": "2026-09-28 08:30:00",
+    "updated_at": "2026-09-28 08:30:00",
+    "timeline": [
+      {
+        "status": "SUBMITTED",
+        "timestamp": "28 Sep, 08:30 AM",
+        "note": "Emergency alert received - flagged as CRITICAL",
+        "completed": true
+      },
+      {
+        "status": "VERIFIED",
+        "timestamp": "",
+        "note": "Pending verification",
+        "completed": false
+      },
+      {
+        "status": "IN_PROGRESS",
+        "timestamp": "",
+        "note": "Pending technician assignment",
+        "completed": false
+      },
+      {
+        "status": "RESOLVED",
+        "timestamp": "",
+        "note": "Pending fix",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "QF1026",
+    "title": "Major Water Pipe Leakage",
+    "description": "Water leaking rapidly from pipe near ground floor corridor, flooding floor.",
+    "category": "Water",
+    "location": "Hostel B",
+    "latitude": 20.294,
+    "longitude": 85.823,
+    "severity": "HIGH",
+    "impact": "MEDIUM",
+    "priority": "HIGH",
+    "priority_score": 16,
+    "priority_reason": "Water flooding risk and water wastage in residential hostel",
+    "status": "IN_PROGRESS",
+    "image": "https://picsum.photos/seed/water1026/400/250",
+    "reporter": "student@quickfix.demo",
+    "created_at": "2026-09-27 16:15:00",
+    "updated_at": "2026-09-28 07:45:00",
+    "timeline": [
+      {
+        "status": "SUBMITTED",
+        "timestamp": "27 Sep, 04:15 PM",
+        "note": "Reported by hostel resident",
+        "completed": true
+      },
+      {
+        "status": "VERIFIED",
+        "timestamp": "27 Sep, 05:00 PM",
+        "note": "Hostel warden confirmed leak",
+        "completed": true
+      },
+      {
+        "status": "IN_PROGRESS",
+        "timestamp": "28 Sep, 07:45 AM",
+        "note": "Plumber arrived, main valve temporarily shut",
+        "completed": true
+      },
+      {
+        "status": "RESOLVED",
+        "timestamp": "",
+        "note": "Repair underway",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "QF1027",
+    "title": "Cafeteria Wi-Fi Access Point Offline",
+    "description": "WiFi signal not transmitting in seating area, cannot connect.",
+    "category": "Network",
+    "location": "Cafeteria",
+    "latitude": 20.2952,
+    "longitude": 85.8265,
+    "severity": "MEDIUM",
+    "impact": "HIGH",
+    "priority": "MEDIUM",
+    "priority_score": 8,
+    "priority_reason": "High student traffic area; router reboot required",
+    "status": "VERIFIED",
+    "image": "https://picsum.photos/seed/wifi1027/400/250",
+    "reporter": "guest@quickfix.demo",
+    "created_at": "2026-09-28 09:10:00",
+    "updated_at": "2026-09-28 09:30:00",
+    "timeline": [
+      {
+        "status": "SUBMITTED",
+        "timestamp": "28 Sep, 09:10 AM",
+        "note": "Reported by student during lunch hour",
+        "completed": true
+      },
+      {
+        "status": "VERIFIED",
+        "timestamp": "28 Sep, 09:30 AM",
+        "note": "IT Helpdesk pinged switch - no response",
+        "completed": true
+      },
+      {
+        "status": "IN_PROGRESS",
+        "timestamp": "",
+        "note": "Network tech assigned",
+        "completed": false
+      },
+      {
+        "status": "RESOLVED",
+        "timestamp": "",
+        "note": "Pending resolution",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "QF1028",
+    "title": "Broken Wooden Bench Near Main Gate",
+    "description": "Wood splintered and detached on right side seating bench.",
+    "category": "Infrastructure",
+    "location": "Main Gate",
+    "latitude": 20.298,
+    "longitude": 85.821,
+    "severity": "LOW",
+    "impact": "HIGH",
+    "priority": "MEDIUM",
+    "priority_score": 10,
+    "priority_reason": "Public campus entrance; aesthetic and mild safety issue",
+    "status": "RESOLVED",
+    "image": "https://picsum.photos/seed/bench1028/400/250",
+    "reporter": "student@quickfix.demo",
+    "created_at": "2026-09-26 08:30:00",
+    "updated_at": "2026-09-27 16:00:00",
+    "timeline": [
+      {
+        "status": "SUBMITTED",
+        "timestamp": "26 Sep, 08:30 AM",
+        "note": "Report submitted",
+        "completed": true
+      },
+      {
+        "status": "VERIFIED",
+        "timestamp": "26 Sep, 09:00 AM",
+        "note": "Carpentry team inspected",
+        "completed": true
+      },
+      {
+        "status": "IN_PROGRESS",
+        "timestamp": "26 Sep, 11:45 AM",
+        "note": "Replaced wooden slats and secured bolts",
+        "completed": true
+      },
+      {
+        "status": "RESOLVED",
+        "timestamp": "27 Sep, 04:00 PM",
+        "note": "Fixed and verified by campus supervisor",
+        "completed": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[project]
+name = "quickfix"
+version = "1.0.0"
+description = "QuickFix - Smart Campus Issue Management"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "QuickFix Team", email = "quickfix@campus.edu" }
+]
+dependencies = [
+    "flet>=1.0.1"
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli>=1.0.1",
+    "flet-desktop>=1.0.1",
+    "flet-web>=1.0.1"
+]
+
+[tool.flet]
+org = "org.quickfix"
+product = "quickfix"
+company = "QuickFix"
+copyright = "Copyright (C) 2026 QuickFix"
+
+[tool.flet.app]
+path = "src"
