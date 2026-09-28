@@ -41,12 +41,12 @@ jobs:
 
       - name: Build Android APK with Flet
         run: |
-          cd quickfix
+          if [ -d "quickfix" ]; then cd quickfix; fi
           flet build apk --project-name quickfix --build-version 1.0.0 --build-number 1 --no-rich-output --yes
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: quickfix-android-apk
-          path: quickfix/build/apk/*.apk
+          path: "**/build/apk/*.apk"
           retention-days: 14
