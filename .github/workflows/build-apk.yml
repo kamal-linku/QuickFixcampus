@@ -42,7 +42,7 @@ jobs:
       - name: Build Android APK with Flet
         run: |
           if [ -d "quickfix" ]; then cd quickfix; fi
-          flet build apk --project-name quickfix --build-version 1.0.0 --build-number 1 --no-rich-output --yes
+          flet build apk --build-version 1.0.0 --build-number 1 --no-rich-output --yes
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
