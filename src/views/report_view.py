@@ -1,4 +1,6 @@
 import flet as ft
+import os
+import base64
 from services.storage_service import StorageService
 from services.smart_engine import SmartEngine
 from services.notification_service import NotificationService
@@ -285,23 +287,81 @@ class ReportView:
         )
         photo_label = ft.Text("📷 Attached Evidence: Street light photo attached", size=11, color="#475569", italic=True)
 
-        def set_preset_photo(cat):
+        def on_file_picked(e: ft.FilePickerResultEvent):
+            if e.files and len(e.files) > 0:
+                picked = e.files[0]
+                new_src = None
+                if picked.bytes:
+                    b64 = base64.b64encode(picked.bytes).decode("utf-8")
+                    new_src = f"data:image/jpeg;base64,{b64}"
+                elif picked.path and os.path.exists(picked.path):
+                    try:
+                        with open(picked.path, "rb") as img_f:
+                            b64 = base64.b64encode(img_f.read()).decode("utf-8")
+                            new_src = f"data:image/jpeg;base64,{b64}"
+                    except Exception:
+                        new_src = picked.path
+                else:
+                    new_src = picked.path or ""
+
+                if new_src:
+                    self.photo_url = new_src
+                    photo_image.src = self.photo_url
+                    photo_label.value = f"📷 Gallery Photo Attached: {picked.name}"
+                    self.page.show_dialog(
+                        ft.SnackBar(content=f"🖼️ Attached evidence photo: {picked.name}", bgcolor="#10B981", open=True)
+                    )
+                    self.page.update()
+
+        file_picker = ft.FilePicker(on_result=on_file_picked)
+        if hasattr(self.page, "overlay") and self.page.overlay is not None:
+            if file_picker not in self.page.overlay:
+                self.page.overlay.append(file_picker)
+
+        def handle_gallery(e):
+            file_picker.pick_files(
+                dialog_title="Select Campus Evidence Photo",
+                file_type=ft.FilePickerFileType.IMAGE,
+                with_data=True
+            )
+
+        def handle_camera(e):
+            captured = False
+            try:
+                import cv2
+                cap = cv2.VideoCapture(0)
+                if cap.isOpened():
+                    ret, frame = cap.read()
+                    cap.release()
+                    if ret and frame is not None:
+                        _, buffer = cv2.imencode(".jpg", frame)
+                        b64 = base64.b64encode(buffer).decode("utf-8")
+                        self.photo_url = f"data:image/jpeg;base64,{b64}"
+                        photo_image.src = self.photo_url
+                        photo_label.value = "📸 Live Camera Snapshot Attached"
+                        self.page.show_dialog(
+                            ft.SnackBar(content="📸 Photo captured live from camera!", bgcolor="#10B981", open=True)
+                        )
+                        self.page.update()
+                        captured = True
+            except Exception:
+                captured = False
+
+            if not captured:
+                file_picker.pick_files(
+                    dialog_title="Capture or Select Photo",
+                    file_type=ft.FilePickerFileType.IMAGE,
+                    with_data=True
+                )
+
+        def set_preset_photo(cat, label_name):
             self.photo_url = SAMPLE_PHOTOS.get(cat, SAMPLE_PHOTOS["Default"])
             photo_image.src = self.photo_url
-            photo_label.value = f"📷 Evidence photo selected for {cat}"
+            photo_label.value = f"📷 Evidence Preset: {label_name}"
+            self.page.show_dialog(
+                ft.SnackBar(content=f"Attached sample: {label_name}", bgcolor="#2563EB", open=True)
+            )
             self.page.update()
-
-        def mock_camera(e):
-            set_preset_photo(category_dropdown.value or "Default")
-            self.page.show_dialog(
-                ft.SnackBar(content="📸 Photo captured from camera!", bgcolor="#10B981", open=True)
-            )
-
-        def mock_gallery(e):
-            set_preset_photo(category_dropdown.value or "Default")
-            self.page.show_dialog(
-                ft.SnackBar(content="🖼️ Photo selected from device gallery!", bgcolor="#10B981", open=True)
-            )
 
         photo_controls_row = ft.Row(
             spacing=8,
@@ -315,19 +375,30 @@ class ReportView:
                         ]
                     ),
                     style=ft.ButtonStyle(bgcolor="#1E3A8A", shape=ft.RoundedRectangleBorder(radius=10)),
-                    on_click=mock_camera
+                    on_click=handle_camera
                 ),
                 ft.OutlinedButton(
                     content=ft.Row(
                         spacing=4,
                         controls=[
                             ft.Icon(ft.Icons.PHOTO_LIBRARY_ROUNDED, color="#475569", size=16),
-                            ft.Text("Gallery", size=11, color="#475569")
+                            ft.Text("Choose from Gallery", size=11, color="#475569")
                         ]
                     ),
                     style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
-                    on_click=mock_gallery
+                    on_click=handle_gallery
                 )
+            ]
+        )
+
+        preset_chips = ft.Row(
+            spacing=6,
+            scroll=ft.ScrollMode.ADAPTIVE,
+            controls=[
+                ft.Chip(label=ft.Text("💡 Street Light", size=10), on_click=lambda _: set_preset_photo("Electrical", "Street Light")),
+                ft.Chip(label=ft.Text("💧 Pipe Leak", size=10), on_click=lambda _: set_preset_photo("Water", "Pipe Leak")),
+                ft.Chip(label=ft.Text("⚡ Hazard Wire", size=10), on_click=lambda _: set_preset_photo("Electrical", "Hazard Wire")),
+                ft.Chip(label=ft.Text("🪑 Broken Bench", size=10), on_click=lambda _: set_preset_photo("Infrastructure", "Broken Bench")),
             ]
         )
 
@@ -515,6 +586,7 @@ class ReportView:
                             photo_image,
                             photo_label,
                             photo_controls_row,
+                            preset_chips,
                             ft.Divider(height=1, color="#F1F5F9"),
                             priority_preview_box,
                             duplicate_banner,

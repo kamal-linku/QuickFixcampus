@@ -3,12 +3,13 @@ from services.storage_service import StorageService
 from services.notification_service import NotificationService
 
 class ProfileView:
-    def __init__(self, storage: StorageService, notifications: NotificationService, page: ft.Page, current_role: str, on_role_change):
+    def __init__(self, storage: StorageService, notifications: NotificationService, page: ft.Page, current_role: str, on_role_change, on_logout=None):
         self.storage = storage
         self.notifications = notifications
         self.page = page
         self.current_role = current_role
         self.on_role_change = on_role_change
+        self.on_logout = on_logout
 
     def build(self) -> ft.Control:
         user_email = "student@quickfix.demo" if self.current_role == "Student" else "admin@quickfix.demo"
@@ -197,6 +198,40 @@ class ProfileView:
             )
         )
 
+        logout_card = ft.Container(
+            margin=ft.Margin(16, 0, 16, 12),
+            padding=16,
+            border_radius=16,
+            bgcolor="#FFFFFF",
+            border=ft.Border.all(1, "#E2E8F0"),
+            content=ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[
+                    ft.Column(
+                        spacing=2,
+                        controls=[
+                            ft.Text("Sign Out", size=13, weight=ft.FontWeight.BOLD, color="#0F172A"),
+                            ft.Text("Log out and return to the login screen", size=11, color="#64748B")
+                        ]
+                    ),
+                    ft.OutlinedButton(
+                        content=ft.Row(
+                            spacing=4,
+                            controls=[
+                                ft.Icon(ft.Icons.LOGOUT, size=15, color="#DC2626"),
+                                ft.Text("Log Out", size=11, color="#DC2626")
+                            ]
+                        ),
+                        style=ft.ButtonStyle(
+                            shape=ft.RoundedRectangleBorder(radius=10),
+                            side=ft.BorderSide(1, "#FECACA")
+                        ),
+                        on_click=lambda _: self.on_logout() if self.on_logout else None
+                    )
+                ]
+            )
+        )
+
         # About Card & Pitch (Page 35)
         about_card = ft.Container(
             margin=ft.Margin(16, 0, 16, 24),
@@ -222,6 +257,7 @@ class ProfileView:
                 role_switcher_card,
                 notifications_card,
                 data_management_card,
+                logout_card,
                 about_card,
                 ft.Container(height=30)
             ]

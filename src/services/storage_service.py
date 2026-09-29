@@ -5,6 +5,7 @@ from datetime import datetime
 from models.issue import Issue, IssueStatus, PriorityLevel
 
 DATA_FILE_PATH = os.path.join(os.path.dirname(__file__), "..", "quickfix_data.json")
+SESSION_FILE_PATH = os.path.join(os.path.dirname(__file__), "..", "quickfix_session.json")
 
 DEMO_ISSUES = [
     {
@@ -251,3 +252,28 @@ class StorageService:
     def reset_demo_data(self):
         with open(DATA_FILE_PATH, "w", encoding="utf-8") as f:
             json.dump(DEMO_ISSUES, f, indent=2)
+
+    def get_session(self) -> Optional[Dict[str, Any]]:
+        if os.path.exists(SESSION_FILE_PATH):
+            try:
+                with open(SESSION_FILE_PATH, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if data and data.get("logged_in"):
+                        return data
+            except Exception:
+                return None
+        return None
+
+    def save_session(self, user_data: Dict[str, Any]):
+        user_data["logged_in"] = True
+        user_data["login_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open(SESSION_FILE_PATH, "w", encoding="utf-8") as f:
+            json.dump(user_data, f, indent=2)
+
+    def clear_session(self):
+        if os.path.exists(SESSION_FILE_PATH):
+            try:
+                os.remove(SESSION_FILE_PATH)
+            except Exception:
+                with open(SESSION_FILE_PATH, "w", encoding="utf-8") as f:
+                    json.dump({"logged_in": False}, f)
