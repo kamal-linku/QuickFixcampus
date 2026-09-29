@@ -250,21 +250,39 @@ def main(page: ft.Page):
         )
     )
 
-    app_wrapper = ft.SafeArea(
-        expand=True,
-        content=ft.Container(
+    # Responsive layout: full width on mobile devices, centered mockup on desktop
+    is_mobile = False
+    try:
+        if hasattr(page, "platform") and page.platform in [ft.PagePlatform.ANDROID, ft.PagePlatform.IOS]:
+            is_mobile = True
+        elif hasattr(page, "client_user_agent") and page.client_user_agent:
+            ua = str(page.client_user_agent).lower()
+            if "android" in ua or "iphone" in ua or "mobile" in ua:
+                is_mobile = True
+    except Exception:
+        pass
+
+    if is_mobile:
+        app_wrapper = ft.SafeArea(
             expand=True,
-            alignment=ft.Alignment.CENTER,
-            bgcolor="#E2E8F0",
+            content=phone_frame
+        )
+    else:
+        app_wrapper = ft.SafeArea(
+            expand=True,
             content=ft.Container(
-                width=450,
                 expand=True,
-                bgcolor="#FFFFFF",
-                shadow=ft.BoxShadow(spread_radius=1, blur_radius=20, color="#64748B30"),
-                content=phone_frame
+                alignment=ft.Alignment.CENTER,
+                bgcolor="#E2E8F0",
+                content=ft.Container(
+                    width=440,
+                    expand=True,
+                    bgcolor="#FFFFFF",
+                    shadow=ft.BoxShadow(spread_radius=1, blur_radius=20, color="#64748B30"),
+                    content=phone_frame
+                )
             )
         )
-    )
 
     page.add(app_wrapper)
 

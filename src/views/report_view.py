@@ -287,45 +287,52 @@ class ReportView:
         )
         photo_label = ft.Text("📷 Attached Evidence: Street light photo attached", size=11, color="#475569", italic=True)
 
+        def apply_picked_file(picked):
+            new_src = None
+            if picked.bytes:
+                b64 = base64.b64encode(picked.bytes).decode("utf-8")
+                new_src = f"data:image/jpeg;base64,{b64}"
+            elif picked.path and os.path.exists(picked.path):
+                try:
+                    with open(picked.path, "rb") as img_f:
+                        b64 = base64.b64encode(img_f.read()).decode("utf-8")
+                        new_src = f"data:image/jpeg;base64,{b64}"
+                except Exception:
+                    new_src = picked.path
+            else:
+                new_src = picked.path or ""
+
+            if new_src:
+                self.photo_url = new_src
+                photo_image.src = self.photo_url
+                photo_label.value = f"📷 Gallery Photo Attached: {picked.name}"
+                self.page.show_dialog(
+                    ft.SnackBar(content=f"🖼️ Attached evidence photo: {picked.name}", bgcolor="#10B981", open=True)
+                )
+                self.page.update()
+
         def on_file_picked(e: ft.FilePickerResultEvent):
             if e.files and len(e.files) > 0:
-                picked = e.files[0]
-                new_src = None
-                if picked.bytes:
-                    b64 = base64.b64encode(picked.bytes).decode("utf-8")
-                    new_src = f"data:image/jpeg;base64,{b64}"
-                elif picked.path and os.path.exists(picked.path):
-                    try:
-                        with open(picked.path, "rb") as img_f:
-                            b64 = base64.b64encode(img_f.read()).decode("utf-8")
-                            new_src = f"data:image/jpeg;base64,{b64}"
-                    except Exception:
-                        new_src = picked.path
-                else:
-                    new_src = picked.path or ""
-
-                if new_src:
-                    self.photo_url = new_src
-                    photo_image.src = self.photo_url
-                    photo_label.value = f"📷 Gallery Photo Attached: {picked.name}"
-                    self.page.show_dialog(
-                        ft.SnackBar(content=f"🖼️ Attached evidence photo: {picked.name}", bgcolor="#10B981", open=True)
-                    )
-                    self.page.update()
+                apply_picked_file(e.files[0])
 
         file_picker = ft.FilePicker(on_result=on_file_picked)
-        if hasattr(self.page, "overlay") and self.page.overlay is not None:
-            if file_picker not in self.page.overlay:
-                self.page.overlay.append(file_picker)
+        if hasattr(self.page, "services") and self.page.services is not None:
+            if file_picker not in self.page.services:
+                self.page.services.append(file_picker)
 
-        def handle_gallery(e):
-            file_picker.pick_files(
-                dialog_title="Select Campus Evidence Photo",
-                file_type=ft.FilePickerFileType.IMAGE,
-                with_data=True
-            )
+        async def handle_gallery(e):
+            try:
+                files = await file_picker.pick_files(
+                    dialog_title="Select Campus Evidence Photo",
+                    file_type=ft.FilePickerFileType.IMAGE,
+                    with_data=True
+                )
+                if files and len(files) > 0:
+                    apply_picked_file(files[0])
+            except Exception as ex:
+                print(f"Gallery picker: {ex}")
 
-        def handle_camera(e):
+        async def handle_camera(e):
             captured = False
             try:
                 import cv2
@@ -348,11 +355,16 @@ class ReportView:
                 captured = False
 
             if not captured:
-                file_picker.pick_files(
-                    dialog_title="Capture or Select Photo",
-                    file_type=ft.FilePickerFileType.IMAGE,
-                    with_data=True
-                )
+                try:
+                    files = await file_picker.pick_files(
+                        dialog_title="Capture or Select Photo",
+                        file_type=ft.FilePickerFileType.IMAGE,
+                        with_data=True
+                    )
+                    if files and len(files) > 0:
+                        apply_picked_file(files[0])
+                except Exception as ex:
+                    print(f"Camera picker: {ex}")
 
         def set_preset_photo(cat, label_name):
             self.photo_url = SAMPLE_PHOTOS.get(cat, SAMPLE_PHOTOS["Default"])
